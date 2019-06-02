@@ -1,7 +1,7 @@
 XDG_CONFIG_HOME := $(HOME)/.config
 
 .PHONY: all
-all: vim pop_os base16_shell
+all: dotfiles pop_os base16_shell vim
 
 .PHONY: base16_shell
 base16_shell:
