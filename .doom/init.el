@@ -170,7 +170,7 @@
        ;;impatient-mode    ; show off code over HTTP
 
        :private
-       mikos
+       custom
 
        :config
        ;; For literate config users. This will tangle+compile a config.org
