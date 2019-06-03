@@ -35,6 +35,7 @@ pop_os:
 		neovim \
 		openssh-server \
 		ranger \
+		ripgrep \
 		tmux \
 		xcape
 
