@@ -7,6 +7,21 @@ all: dotfiles doom pop_os base16_shell vim
 base16_shell: | $(XDG_CONFIG_HOME)
 	git clone https://github.com/chriskempson/base16-shell.git "$(XDG_CONFIG_HOME)/base16-shell"
 
+.PHONY: docker
+docker:
+	sudo apt-get remove docker docker-engine docker.io containerd runc;
+	sudo apt-get update;
+	sudo apt-get install -y \
+		apt-transport-https \
+		ca-certificates \
+		curl \
+		gnupg-agent \
+		software-properties-common;
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -;
+	sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(shell lsb_release -cs) test";
+	sudo apt-get update;
+	sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose;
+
 .PHONY: doom
 doom: | $(XDG_CONFIG_HOME)
 	ln -sfn "$(CURDIR)/.doom" "$(XDG_CONFIG_HOME)/doom";
