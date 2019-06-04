@@ -38,6 +38,11 @@ dotfiles:
 	done; \
 	ln -fn "$(CURDIR)/gitignore" "$(HOME)/.gitignore";
 
+.PHONY: nodejs
+nodejs:
+	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+	sudo apt-get install -y nodejs
+
 .PHONY: pop_os
 pop_os:
 	sudo apt update
