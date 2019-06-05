@@ -38,6 +38,12 @@ dotfiles:
 	done; \
 	ln -fn "$(CURDIR)/gitignore" "$(HOME)/.gitignore";
 
+.PHONY: fonts
+fonts:
+	git clone https://github.com/powerline/fonts.git --depth=1 /tmp/powerline_fonts
+	cd /tmp/powerline_fonts && ./install.sh
+	rm -rf /tmp/powerline_fonts
+
 .PHONY: nodejs
 nodejs:
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
