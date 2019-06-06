@@ -55,6 +55,7 @@ pop_os:
 	sudo apt install -y \
 		dconf-editor \
 		emacs \
+		filezilla \
 		gnome-tweaks \
 		htop \
 		mpv \
