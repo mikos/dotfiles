@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Update vim plugins, doom-emacs, and doom-emacs packages
+ue() {
+  vim +PlugUpdate +qall
+  cd ~/.emacs.d/bin \
+    && ./doom -y upgrade \
+    && ./doom -y update \
+    && ./doom -y refresh \
+    && cd - || exit
+}
