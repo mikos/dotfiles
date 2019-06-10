@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# go path
+export GOPATH="${HOME}/go"
+
+# update path
+export PATH="/usr/local/bin:${PATH}:/sbin"
+
+# add go path
+export PATH="/usr/lib/go-1.12/bin:${GOPATH}/bin:${PATH}"
+
+# add npm path
+export PATH="${HOME}/.node_modules/bin:${PATH}"

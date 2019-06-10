@@ -1,7 +1,7 @@
 XDG_CONFIG_HOME := "$(HOME)/.config"
 
 .PHONY: all
-all: dotfiles doom pop_os base16_shell vim
+all: docker dotfiles doom fonts nodejs pop_os base16_shell vim
 
 .PHONY: base16_shell
 base16_shell: | $(XDG_CONFIG_HOME)
@@ -9,26 +9,26 @@ base16_shell: | $(XDG_CONFIG_HOME)
 
 .PHONY: docker
 docker:
-	sudo apt-get remove docker docker-engine docker.io containerd runc;
-	sudo apt-get update;
+	sudo apt-get remove docker docker-engine docker.io containerd runc
+	sudo apt-get update
 	sudo apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
 		curl \
 		gnupg-agent \
-		software-properties-common;
-	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -;
-	sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(shell lsb_release -cs) test";
-	sudo apt-get update;
-	sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose;
+		software-properties-common
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+	sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(shell lsb_release -cs) test"
+	sudo apt-get update
+	sudo apt-get -y install docker-ce docker-ce-cli containerd.io docker-compose
 
 .PHONY: doom
-doom: | $(XDG_CONFIG_HOME)
-	ln -sfn "$(CURDIR)/.doom" "$(XDG_CONFIG_HOME)/doom";
-	git clone https://github.com/hlissner/doom-emacs ~/.emacs.d;
-	mkdir -p ~/.emacs.d/modules/private;
-	ln -sfn "$(CURDIR)/.doom/custom" ~/.emacs.d/modules/private/custom;
-	~/.emacs.d/bin/doom -y install;
+doom: | $(XDG_CONFIG_HOME) nodejs
+	ln -sfn "$(CURDIR)/.doom" "$(XDG_CONFIG_HOME)/doom"
+	git clone https://github.com/hlissner/doom-emacs ~/.emacs.d
+	mkdir -p ~/.emacs.d/modules/private
+	ln -sfn "$(CURDIR)/.doom/custom" ~/.emacs.d/modules/private/custom
+	~/.emacs.d/bin/doom -y install
 
 .PHONY: dotfiles
 dotfiles:
@@ -44,27 +44,61 @@ fonts:
 	cd /tmp/powerline_fonts && ./install.sh
 	rm -rf /tmp/powerline_fonts
 
+.PHONY: golang
+golang: | dotfiles
+	sudo apt update
+	sudo apt install -y golang-1.12
+	go get -u -v github.com/mdempsky/gocode
+	go get -u -v golang.org/x/lint/golint
+	go get -u -v golang.org/x/tools/cmd/guru
+	go get -u -v golang.org/x/tools/cmd/goimports
+	go get -u -v golang.org/x/tools/cmd/gorename
+	go get -u -v github.com/motemen/gore/cmd/gore
+
+.PHONY: node_modules
+node_modules: | dotfiles nodejs
+	npm -g i \
+		js-beautify \
+		marked \
+		pandoc \
+		stylelint
+
 .PHONY: nodejs
 nodejs:
+ifeq (, $(shell which node))
 	curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
 	sudo apt-get install -y nodejs
+else
+	@echo "Skipping nodejs target, node already installed."
+endif
 
 .PHONY: pop_os
 pop_os:
 	sudo apt update
 	sudo apt install -y \
 		dconf-editor \
+		editorconfig \
 		emacs \
+		fd-find \
 		filezilla \
+		fzf \
 		gnome-tweaks \
 		htop \
+		markdown \
 		mpv \
 		neovim \
 		openssh-server \
+		pandoc \
 		ranger \
+		ruby \
 		ripgrep \
+		shellcheck \
 		tmux \
 		xcape
+ifeq (, $(wildcard /usr/local/bin/fd))
+	sudo ln -s $(shell which fdfind) /usr/local/bin/fd
+endif
+
 
 .PHONY: vim
 vim: | $(XDG_CONFIG_HOME)
