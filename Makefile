@@ -60,7 +60,6 @@ node_modules: | dotfiles nodejs
 	npm -g i \
 		js-beautify \
 		marked \
-		pandoc \
 		stylelint
 
 .PHONY: nodejs
