@@ -5,10 +5,10 @@ export DOCKER_REPO_PREFIX=jess
 #
 # Helper functions
 #
-del_stopped(){
-  local name=$1
-  local state
-  state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
+del_stopped() {
+	local name=$1
+	local state
+	state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
 
   if [[ "$state" == "false" ]]; then
     docker rm "$name"
@@ -28,25 +28,43 @@ dropbox(){
     --name dropbox \
     dropbox
 }
-# slack(){
-#   del_stopped slack
+
+cap() {
+  docker run -it --rm \
+    -v "$(pwd):/app" \
+    -v "$(dirname "$SSH_AUTH_SOCK"):$(dirname "$SSH_AUTH_SOCK")" \
+    -e SSH_AUTH_SOCK="$SSH_AUTH_SOCK" \
+    capistrano \
+    cap "$@"
+}
+
+cap2() {
+  docker run -it --rm \
+    -v "$(pwd):/app" \
+    -v "$(dirname "$SSH_AUTH_SOCK"):$(dirname "$SSH_AUTH_SOCK")" \
+    -e SSH_AUTH_SOCK="$SSH_AUTH_SOCK" \
+    capistrano:2.0 \
+    cap "$@"
+}
+
+# 	del_stopped slack
 #
-#   docker run -d \
-#     -v /etc/localtime:/etc/localtime:ro \
-#     -v /tmp/.X11-unix:/tmp/.X11-unix \
-#     -e "DISPLAY=unix${DISPLAY}" \
-#     --device /dev/snd \
-#     --device /dev/dri \
-#     --device /dev/video0 \
-#     --group-add audio \
-#     --group-add video \
-#     -v "${HOME}/.config/Slack:/root/.config/Slack" \
-#     --ipc="host" \
-#     --name slack \
-#     ${DOCKER_REPO_PREFIX}/slack "$@"
+# 	docker run -d \
+# 		-v /etc/localtime:/etc/localtime:ro \
+# 		-v /tmp/.X11-unix:/tmp/.X11-unix \
+# 		-e "DISPLAY=unix${DISPLAY}" \
+# 		--device /dev/snd \
+# 		--device /dev/dri \
+# 		--device /dev/video0 \
+# 		--group-add audio \
+# 		--group-add video \
+# 		-v "${HOME}/.config/Slack:/root/.config/Slack" \
+# 		--ipc="host" \
+# 		--name slack \
+# 		${DOCKER_REPO_PREFIX}/slack "$@"
 # }
-weechat(){
-  del_stopped weechat
+weechat() {
+	del_stopped weechat
 
   docker run -it \
     -v /etc/localtime:/etc/localtime:ro \
