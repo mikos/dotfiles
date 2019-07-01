@@ -6,39 +6,53 @@ export DOCKER_REPO_PREFIX=jess
 # Helper functions
 #
 del_stopped(){
-	local name=$1
-	local state
-	state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
+  local name=$1
+  local state
+  state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
 
-	if [[ "$state" == "false" ]]; then
-		docker rm "$name"
-	fi
+  if [[ "$state" == "false" ]]; then
+    docker rm "$name"
+  fi
+}
+dropbox(){
+  del_stopped dropbox
+
+  docker run -d \
+    -v "/mnt/storage/Dropbox:/home/dropbox/Dropbox" \
+    -v "${HOME}/.dropbox:/home/dropbox/.dropbox" \
+    -v /etc/localtime:/etc/localtime:ro \
+    -e DROPBOX_UID=1000 \
+    -e DROPBOX_GID=1000 \
+    --restart=always \
+    --net="host" \
+    --name dropbox \
+    dropbox
 }
 # slack(){
-# 	del_stopped slack
-# 
-# 	docker run -d \
-# 		-v /etc/localtime:/etc/localtime:ro \
-# 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-# 		-e "DISPLAY=unix${DISPLAY}" \
-# 		--device /dev/snd \
-# 		--device /dev/dri \
-# 		--device /dev/video0 \
-# 		--group-add audio \
-# 		--group-add video \
-# 		-v "${HOME}/.config/Slack:/root/.config/Slack" \
-# 		--ipc="host" \
-# 		--name slack \
-# 		${DOCKER_REPO_PREFIX}/slack "$@"
+#   del_stopped slack
+#
+#   docker run -d \
+#     -v /etc/localtime:/etc/localtime:ro \
+#     -v /tmp/.X11-unix:/tmp/.X11-unix \
+#     -e "DISPLAY=unix${DISPLAY}" \
+#     --device /dev/snd \
+#     --device /dev/dri \
+#     --device /dev/video0 \
+#     --group-add audio \
+#     --group-add video \
+#     -v "${HOME}/.config/Slack:/root/.config/Slack" \
+#     --ipc="host" \
+#     --name slack \
+#     ${DOCKER_REPO_PREFIX}/slack "$@"
 # }
 weechat(){
-	del_stopped weechat
+  del_stopped weechat
 
-	docker run -it \
-		-v /etc/localtime:/etc/localtime:ro \
-		-v "${HOME}/.weechat:/weechat/.weechat" \
-		-e UID=1000 \
-		-e GID=1000 \
-		--name weechat \
-		jkaberg/weechat
+  docker run -it \
+    -v /etc/localtime:/etc/localtime:ro \
+    -v "${HOME}/.weechat:/weechat/.weechat" \
+    -e UID=1000 \
+    -e GID=1000 \
+    --name weechat \
+    jkaberg/weechat
 }
