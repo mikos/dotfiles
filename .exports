@@ -5,3 +5,6 @@ export EDITOR=/usr/bin/nvim
 
 # Set npm config prefix to home dir to avoid permissions issues
 export npm_config_prefix=~/.node_modules
+
+# Tell fzf to ignore stuff
+export FZF_DEFAULT_COMMAND='rg --files --hidden'
