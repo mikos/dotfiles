@@ -511,8 +511,7 @@ if executable('ag')
 endif
 
 " bind \ to grep shortcut
-command -nargs=+ -complete=file -bar Ag silent! grep! <args>|window|redraw!
-nnoremap \ :Ag<SPACE>
+nnoremap \ :Rg<CR>
 
 " evaluate top-level form
 au BufEnter *.clj nnoremap <buffer> cpt :Eval<CR>
