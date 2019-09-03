@@ -6,6 +6,5 @@ ue() {
   cd ~/.emacs.d/bin \
     && ./doom -y upgrade \
     && ./doom -y update \
-    && ./doom -y refresh \
     && cd - || exit
 }
